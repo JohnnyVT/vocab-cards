@@ -83,13 +83,14 @@ html, body {
   padding-top: max(env(safe-area-inset-top), 10px);
 }
 .deck-name { font-weight: 700; font-size: 20px; white-space: nowrap; }
+#langBtn { margin-left: auto; }
 .progress {
-  flex: 1;
+  width: 100%;
   height: 14px;
-  margin: 0 14px;
   background: rgba(0,0,0,.08);
   border-radius: 999px;
   overflow: hidden;
+  flex: none;
 }
 .progress-fill {
   height: 100%;
@@ -136,10 +137,20 @@ html, body {
   padding: 8px 12px;
   min-height: 0;
 }
-.card {
+/* Card + progress bar share one column so the bar matches the card's width. */
+.card-area {
   flex: 1;
   max-width: min(90vw, 900px);
   height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.card {
+  flex: 1;
+  width: 100%;
+  min-height: 0;
   background: var(--card-bg);
   border-radius: var(--radius);
   box-shadow: var(--shadow);
@@ -208,26 +219,19 @@ html, body {
 }
 .play-btn:active { transform: scale(.92); }
 .play-btn.playing { background: var(--blue); box-shadow: 0 10px 24px rgba(74,163,255,.5); }
-/* Replay buttons: round, flag-coloured, with a white speaker chip (always legible). */
+/* Replay buttons: round flag icons (the flag IS the button). */
 .replay-btn {
   width: clamp(60px, 9vh, 78px);
   height: clamp(60px, 9vh, 78px);
   border: none; border-radius: 50%;
-  background: var(--accent-2);   /* overridden per-language via inline style */
+  background-color: #fff;
+  background-size: cover;
+  background-position: center;
   box-shadow: var(--shadow);
   cursor: pointer;
-  display: grid; place-items: center;
   transition: transform .1s ease;
 }
 .replay-btn:active { transform: scale(.92); }
-.replay-btn .spk {
-  width: 56%; height: 56%;
-  border-radius: 50%;
-  background: #fff;
-  display: grid; place-items: center;
-  font-size: clamp(20px, 3vh, 28px);
-  box-shadow: 0 1px 3px rgba(0,0,0,.15);
-}
 
 /* ---------- Language sheet ---------- */
 .sheet {

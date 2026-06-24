@@ -1,7 +1,7 @@
 // Offline cache for the Kids Flashcard app.
 // Strategy: precache the app shell on install; cache-first for everything
 // else (content + media) so each asset becomes available offline once fetched.
-const VERSION = 'v12';
+const VERSION = 'v13';
 const SHELL = 'shell-' + VERSION;
 const RUNTIME = 'runtime-' + VERSION;
 
@@ -14,6 +14,11 @@ const SHELL_FILES = [
   './icon.svg',
   './decks.json',
   './content/animals/cards.json',
+  './assets/flags/en.svg',
+  './assets/flags/zh.svg',
+  './assets/flags/ja.svg',
+  './assets/flags/vi.svg',
+  './assets/flags/bg.svg',
 ];
 
 self.addEventListener('install', (e) => {

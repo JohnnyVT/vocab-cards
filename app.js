@@ -13,14 +13,6 @@ let playToken = 0;      // cancels an in-flight play sequence when card changes
 // Flag + native name for each language (used by the switch button and replay labels).
 const LANG_FLAG = { en: '🇬🇧', zh: '🇹🇼', ja: '🇯🇵', vi: '🇻🇳', bg: '🇧🇬' };
 const LANG_NAME = { en: 'English', zh: '中文', ja: '日本語', vi: 'Tiếng Việt', bg: 'Български' };
-// Flag-themed background for the round replay buttons.
-const FLAG_BG = {
-  en: 'linear-gradient(135deg, #012169, #C8102E)',
-  zh: 'linear-gradient(135deg, #000095, #FE0000)',
-  ja: 'linear-gradient(135deg, #ffffff, #BC002D)',
-  vi: 'linear-gradient(135deg, #DA251D, #FFD600)',
-  bg: 'linear-gradient(135deg, #00966E, #D62612)',
-};
 
 // UI strings per interface language.
 const I18N = {
@@ -246,11 +238,11 @@ function applyLang() {
   const switchHtml = `<span class="flag">${LANG_FLAG[lang]}</span><span>${LANG_NAME[lang]}</span>`;
   $('langBtn').innerHTML = switchHtml;
   $('homeLangBtn').innerHTML = switchHtml;
-  // Replay buttons: flag-coloured speaker buttons (left = English, right = translation).
+  // Replay buttons: round flag icons (left = English, right = translation).
   const en = $('replayEn'), tr = $('replayTr');
-  en.style.background = FLAG_BG.en;
+  en.style.backgroundImage = 'url(assets/flags/en.svg)';
   en.setAttribute('aria-label', `Play ${LANG_NAME.en}`);
-  tr.style.background = FLAG_BG[lang] || FLAG_BG.en;
+  tr.style.backgroundImage = `url(assets/flags/${lang}.svg)`;
   tr.setAttribute('aria-label', `Play ${LANG_NAME[lang]}`);
   tr.hidden = (lang === 'en');   // no translation in English-only mode
   document.documentElement.lang = lang;
