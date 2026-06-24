@@ -1,0 +1,13 @@
+{
+  "name": "ABC 單字卡",
+  "short_name": "單字卡",
+  "description": "給小朋友學英文單字與簡單句子的單字卡 App",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#fff8e7",
+  "theme_color": "#ffd54a",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

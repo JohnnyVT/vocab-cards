@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#ffd54a" />
+  <title>ABC 單字卡</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- 卡組選擇畫面 -->
+  <section id="home" class="screen">
+    <h1 class="home-title">📚 我的單字卡</h1>
+    <div id="deckList" class="deck-list"></div>
+    <p class="home-hint">挑一組開始學英文吧！</p>
+  </section>
+
+  <!-- 單字卡播放畫面 -->
+  <section id="player" class="screen hidden">
+    <header class="topbar">
+      <button id="backBtn" class="icon-btn" aria-label="回到卡組">‹</button>
+      <span id="deckName" class="deck-name"></span>
+      <span id="progress" class="progress"></span>
+      <button id="langBtn" class="icon-btn" aria-label="切換語言">🌐</button>
+    </header>
+
+    <main class="stage">
+      <button id="prevBtn" class="nav-btn nav-prev" aria-label="上一張">‹</button>
+
+      <div class="card">
+        <div id="media" class="media"></div>
+        <div class="texts">
+          <div id="enText" class="en-text"></div>
+          <div id="trText" class="tr-text"></div>
+        </div>
+      </div>
+
+      <button id="nextBtn" class="nav-btn nav-next" aria-label="下一張">›</button>
+    </main>
+
+    <footer class="controls">
+      <button id="replayEn" class="mini-btn" aria-label="再聽英文">🔊 英文</button>
+      <button id="playBtn" class="play-btn" aria-label="播放">▶</button>
+      <button id="replayTr" class="mini-btn" aria-label="再聽翻譯">🌐 翻譯</button>
+    </footer>
+  </section>
+
+  <!-- 語言選擇 -->
+  <div id="langSheet" class="sheet hidden">
+    <div class="sheet-card">
+      <h2>選擇翻譯語言</h2>
+      <div class="lang-grid">
+        <button class="lang-opt" data-lang="zh">🇹🇼 中文</button>
+        <button class="lang-opt" data-lang="ja">🇯🇵 日本語</button>
+        <button class="lang-opt" data-lang="vi">🇻🇳 Tiếng Việt</button>
+        <button class="lang-opt" data-lang="bg">🇧🇬 Български</button>
+      </div>
+      <button id="langClose" class="close-btn">關閉</button>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

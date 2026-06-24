@@ -1,0 +1,17 @@
+{
+  "decks": [
+    {
+      "id": "animals",
+      "title": { "en": "Animals", "zh": "動物", "ja": "どうぶつ", "vi": "Động vật", "bg": "Животни" },
+      "emoji": "🐘",
+      "path": "content/animals/cards.json",
+      "bundled": true
+    }
+  ],
+  "comingSoon": [
+    { "id": "daily", "title": { "zh": "日常用語" }, "emoji": "👋" },
+    { "id": "colors", "title": { "zh": "顏色" }, "emoji": "🎨" },
+    { "id": "food", "title": { "zh": "食物" }, "emoji": "🍎" },
+    { "id": "numbers", "title": { "zh": "數字" }, "emoji": "🔢" }
+  ]
+}

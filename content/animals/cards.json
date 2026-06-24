@@ -1,0 +1,97 @@
+{
+  "deckId": "animals",
+  "title": { "en": "Animals", "zh": "動物", "ja": "どうぶつ", "vi": "Động vật", "bg": "Животни" },
+  "cards": [
+    {
+      "id": "bird",
+      "type": "image",
+      "emoji": "🐦",
+      "media": "assets/img/bird.webp",
+      "text": { "en": "Bird", "zh": "鳥", "ja": "とり", "vi": "Chim", "bg": "Птица" }
+    },
+    {
+      "id": "cat",
+      "type": "image",
+      "emoji": "🐱",
+      "media": "assets/img/cat.webp",
+      "text": { "en": "Cat", "zh": "貓", "ja": "ねこ", "vi": "Mèo", "bg": "Котка" }
+    },
+    {
+      "id": "dog",
+      "type": "image",
+      "emoji": "🐶",
+      "media": "assets/img/dog.webp",
+      "text": { "en": "Dog", "zh": "狗", "ja": "いぬ", "vi": "Chó", "bg": "Куче" }
+    },
+    {
+      "id": "fish",
+      "type": "image",
+      "emoji": "🐟",
+      "media": "assets/img/fish.webp",
+      "text": { "en": "Fish", "zh": "魚", "ja": "さかな", "vi": "Cá", "bg": "Риба" }
+    },
+    {
+      "id": "rabbit",
+      "type": "image",
+      "emoji": "🐰",
+      "media": "assets/img/rabbit.webp",
+      "text": { "en": "Rabbit", "zh": "兔子", "ja": "うさぎ", "vi": "Thỏ", "bg": "Заек" }
+    },
+    {
+      "id": "elephant",
+      "type": "image",
+      "emoji": "🐘",
+      "media": "assets/img/elephant.webp",
+      "text": { "en": "Elephant", "zh": "大象", "ja": "ぞう", "vi": "Voi", "bg": "Слон" }
+    },
+    {
+      "id": "duck",
+      "type": "image",
+      "emoji": "🦆",
+      "media": "assets/img/duck.webp",
+      "text": { "en": "Duck", "zh": "鴨子", "ja": "あひる", "vi": "Vịt", "bg": "Патица" }
+    },
+    {
+      "id": "bird-fly",
+      "type": "video",
+      "emoji": "🕊️",
+      "media": "assets/video/bird-fly.mp4",
+      "poster": "assets/img/bird-fly.webp",
+      "text": {
+        "en": "The bird can fly.",
+        "zh": "鳥會飛。",
+        "ja": "とりは とべるよ。",
+        "vi": "Con chim biết bay.",
+        "bg": "Птицата може да лети."
+      }
+    },
+    {
+      "id": "cat-sleep",
+      "type": "video",
+      "emoji": "😴",
+      "media": "assets/video/cat-sleep.mp4",
+      "poster": "assets/img/cat-sleep.webp",
+      "text": {
+        "en": "The cat is sleeping.",
+        "zh": "貓在睡覺。",
+        "ja": "ねこが ねているよ。",
+        "vi": "Con mèo đang ngủ.",
+        "bg": "Котката спи."
+      }
+    },
+    {
+      "id": "dog-run",
+      "type": "video",
+      "emoji": "🐕",
+      "media": "assets/video/dog-run.mp4",
+      "poster": "assets/img/dog-run.webp",
+      "text": {
+        "en": "The dog is running.",
+        "zh": "狗在跑步。",
+        "ja": "いぬが はしっているよ。",
+        "vi": "Con chó đang chạy.",
+        "bg": "Кучето тича."
+      }
+    }
+  ]
+}
