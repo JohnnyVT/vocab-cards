@@ -97,14 +97,16 @@
 - **英文唸兩次、放慢（已定）**：英文 mp3 只生成 **1 個（正常速）**，播放時用 `audio.playbackRate` 調速 → 第 1 次 **0.9x**、第 2 次 **0.7x**，並設 `preservesPitch = true` 保留音高。
   - 好處：不必為慢速另存檔、不增加打包體積。
   - 若 0.7x 聽起來有破音/失真，再退而求其次：用 ElevenLabs 預生成一個慢速版英文 mp3。
-- **模型**：用多語模型（如 `eleven_multilingual_v2`）涵蓋 en / zh / ja / vi / bg。
-  - ⚠️ **需先驗證**：保加利亞文（bg）與越南文（vi）的發音品質與覆蓋。製作前先各跑一句試聽，不行再退而求其次（換聲線或該語言改其他來源）。
+- **模型與參數（規則，已定）**：**所有語言一律用 `eleven_turbo_v2_5` + 明確 `language_code` + 高穩定度 `stability: 0.75`**（`similarity_boost: 0.8`，不加 style）。
+  - 為什麼指定 `language_code`：`multilingual_v2` 不支援指定語言，遇到跨語言共用的字/腳本會誤判 → 例如中文「鳥」被念成日文 tori、Cyrillic 被當俄文。turbo + `language_code` 可鎖定語言。
+  - 為什麼高穩定度：單字輸入短、語調容易飄，0.75 讓念法更一致、降低念錯機率。
+  - 新增語言或新卡組一律照此規則；設定集中在 `scripts/gen-audio.mjs` 的 `LANGS`。
 - **流程**：以 `cards.json` 的文字為來源，批次呼叫 ElevenLabs API → 輸出 `assets/audio/{lang}/{id}.mp3` → 人工抽聽確認 → 打包。
 - 為什麼不用瀏覽器內建 TTS：iPad 上常需連網、越/保語音常缺、音質不可控 → 不適合離線兒童用。
 
 ### 5.1 各語言 Voice ID（已選定）
 
-每種語言用各自挑選的聲音（解決口音問題）。模型：多數語言用 `eleven_multilingual_v2`；**中文改用 `eleven_turbo_v2_5` 並帶 `language_code:"zh"`**，避免單一中日共用漢字（如「鳥」）被誤判成日文（念成 tori）。設定見 `scripts/gen-audio.mjs` 的 `LANGS`。
+每種語言用各自挑選的聲音（解決口音問題）。**全部用 `eleven_turbo_v2_5` + 各自 `language_code` + `stability:0.75`**（見上方 §5 規則）。設定見 `scripts/gen-audio.mjs` 的 `LANGS`。
 
 | 語言 | Voice ID |
 |------|----------|

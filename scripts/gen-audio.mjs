@@ -10,20 +10,20 @@
 import { readFile, mkdir, writeFile, access } from 'node:fs/promises';
 import { dirname, resolve, join } from 'node:path';
 
-// Per-language config. Chinese uses turbo_v2_5 with an explicit language_code
-// so single shared CJK characters (e.g. 鳥) aren't misread as Japanese; the
-// other languages stay on multilingual_v2 (already approved).
-const ML = 'eleven_multilingual_v2';
+// RULE: every language is generated with turbo_v2_5 + an explicit language_code
+// + high stability (0.75). The language_code stops shared scripts/characters from
+// being read in the wrong language (e.g. 鳥 -> Japanese "tori"; Cyrillic -> Russian),
+// and high stability keeps prosody consistent and reduces mispronunciations.
+const TURBO = 'eleven_turbo_v2_5';
+const SETTINGS = { stability: 0.75, similarity_boost: 0.8 };
 const LANGS = {
-  en: { voice: '2OEeJcYw2f3bWMzzjVMU', model: ML },
-  zh: { voice: 'APSIkVZudNbPAwyPoeVO', model: 'eleven_turbo_v2_5', languageCode: 'zh',
-        settings: { stability: 0.75, similarity_boost: 0.8 } },
-  ja: { voice: '3321Alera3fXjEWjjbAX', model: ML },
-  vi: { voice: 'IovBBFnLZ6QzJhFLLroy', model: ML },
-  bg: { voice: 'M1ydWt7KnBCiuv4CnEDC', model: ML },
+  en: { voice: '2OEeJcYw2f3bWMzzjVMU', model: TURBO, languageCode: 'en', settings: SETTINGS },
+  zh: { voice: 'APSIkVZudNbPAwyPoeVO', model: TURBO, languageCode: 'zh', settings: SETTINGS },
+  ja: { voice: '3321Alera3fXjEWjjbAX', model: TURBO, languageCode: 'ja', settings: SETTINGS },
+  vi: { voice: 'IovBBFnLZ6QzJhFLLroy', model: TURBO, languageCode: 'vi', settings: SETTINGS },
+  bg: { voice: 'M1ydWt7KnBCiuv4CnEDC', model: TURBO, languageCode: 'bg', settings: SETTINGS },
 };
-// Higher stability => more consistent prosody and fewer mispronunciations.
-const DEFAULT_SETTINGS = { stability: 0.75, similarity_boost: 0.8, style: 0.3 };
+const DEFAULT_SETTINGS = SETTINGS;
 
 const API_KEY = process.env.ELEVENLABS_API_KEY;
 const cardsPath = process.argv[2] || 'content/animals/cards.json';
