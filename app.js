@@ -10,13 +10,17 @@ let deck = null;        // { base, title, cards }
 let index = 0;
 let playToken = 0;      // cancels an in-flight play sequence when card changes
 
+// Flag + native name for each language (used by the switch button and replay labels).
+const LANG_FLAG = { en: '🇬🇧', zh: '🇹🇼', ja: '🇯🇵', vi: '🇻🇳', bg: '🇧🇬' };
+const LANG_NAME = { en: 'English', zh: '中文', ja: '日本語', vi: 'Tiếng Việt', bg: 'Български' };
+
 // UI strings per interface language.
 const I18N = {
-  en: { homeTitle: '📚 My Flashcards', homeHint: 'Pick a set to start learning!', soon: 'Coming soon', sheet: 'Language', close: 'Close', replayEn: '🔊 English', replayTr: '🌐 Translation' },
-  zh: { homeTitle: '📚 我的單字卡', homeHint: '挑一組開始學英文吧！', soon: '即將推出', sheet: '選擇語言', close: '關閉', replayEn: '🔊 英文', replayTr: '🌐 翻譯' },
-  ja: { homeTitle: '📚 たんごカード', homeHint: 'カードを えらんで はじめよう！', soon: 'もうすぐ', sheet: '言語', close: 'とじる', replayEn: '🔊 えいご', replayTr: '🌐 ほんやく' },
-  vi: { homeTitle: '📚 Thẻ từ vựng', homeHint: 'Chọn một bộ để bắt đầu học!', soon: 'Sắp ra mắt', sheet: 'Ngôn ngữ', close: 'Đóng', replayEn: '🔊 Tiếng Anh', replayTr: '🌐 Bản dịch' },
-  bg: { homeTitle: '📚 Моите карти', homeHint: 'Избери комплект, за да започнеш!', soon: 'Очаквайте скоро', sheet: 'Език', close: 'Затвори', replayEn: '🔊 Английски', replayTr: '🌐 Превод' },
+  en: { homeTitle: '📚 My Flashcards', homeHint: 'Pick a set to start learning!', soon: 'Coming soon', sheet: 'Language', close: 'Close' },
+  zh: { homeTitle: '📚 我的單字卡', homeHint: '挑一組開始學英文吧！', soon: '即將推出', sheet: '選擇語言', close: '關閉' },
+  ja: { homeTitle: '📚 たんごカード', homeHint: 'カードを えらんで はじめよう！', soon: 'もうすぐ', sheet: '言語', close: 'とじる' },
+  vi: { homeTitle: '📚 Thẻ từ vựng', homeHint: 'Chọn một bộ để bắt đầu học!', soon: 'Sắp ra mắt', sheet: 'Ngôn ngữ', close: 'Đóng' },
+  bg: { homeTitle: '📚 Моите карти', homeHint: 'Избери комплект, за да започнеш!', soon: 'Очаквайте скоро', sheet: 'Език', close: 'Затвори' },
 };
 const t = () => I18N[lang] || I18N.en;
 const titleOf = (obj) => (obj && (obj[lang] || obj.en)) || '';
@@ -153,16 +157,17 @@ async function playSequence() {
 
   const en = audioPath(card, 'en');
   await playClip(en, 0.9, token);   // 1st: slightly slow
-  if (token !== playToken) return;
-  await playClip(en, 0.7, token);   // 2nd: slower, clearer
-  if (token !== playToken) return;
-  if (lang !== 'en') {              // English-only mode: no translation clip
-    await playClip(audioPath(card, lang), 1.0, token); // translation
-    if (token !== playToken) return;
+  if (token === playToken) await playClip(en, 0.7, token);   // 2nd: slower, clearer
+  if (token === playToken && lang !== 'en') {                // English-only mode: no translation clip
+    await playClip(audioPath(card, lang), 1.0, token);       // translation
   }
 
-  if (v) { try { v.pause(); } catch (e) {} }
-  setPlaying(false);
+  // Only the still-current sequence resets the UI; an interrupting action
+  // (replay / re-tap / card change) owns the state instead.
+  if (token === playToken) {
+    if (v) { try { v.pause(); } catch (e) {} }
+    setPlaying(false);
+  }
 }
 
 function setPlaying(on) {
@@ -190,14 +195,14 @@ prevBtn.onclick = () => go(-1);
 nextBtn.onclick = () => go(1);
 
 $('replayEn').onclick = async () => {
-  const token = ++playToken; stopAllAudio();
+  const token = ++playToken; stopAllAudio(); setPlaying(false);
   const en = audioPath(deck.cards[index], 'en');
   await playClip(en, 0.9, token);
   if (token === playToken) await playClip(en, 0.7, token);
 };
 $('replayTr').onclick = () => {
   if (lang === 'en') return;       // no translation in English-only mode
-  const token = ++playToken; stopAllAudio();
+  const token = ++playToken; stopAllAudio(); setPlaying(false);
   playClip(audioPath(deck.cards[index], lang), 1.0, token);
 };
 
@@ -227,8 +232,13 @@ function applyLang() {
   $('homeHint').textContent = s.homeHint;
   $('langSheetTitle').textContent = s.sheet;
   $('langClose').textContent = s.close;
-  $('replayEn').textContent = s.replayEn;
-  $('replayTr').textContent = s.replayTr;
+  // Language switch buttons: flag + name (home + player).
+  const switchHtml = `<span class="flag">${LANG_FLAG[lang]}</span><span>${LANG_NAME[lang]}</span>`;
+  $('langBtn').innerHTML = switchHtml;
+  $('homeLangBtn').innerHTML = switchHtml;
+  // Replay buttons: speaker icon + language name (left = English, right = translation).
+  $('replayEn').textContent = `🔊 ${LANG_NAME.en}`;
+  $('replayTr').textContent = `🔊 ${LANG_NAME[lang]}`;
   $('replayTr').hidden = (lang === 'en');   // no translation in English-only mode
   document.documentElement.lang = lang;
   document.querySelectorAll('.lang-opt').forEach(b =>
