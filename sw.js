@@ -1,7 +1,7 @@
 // Offline cache for the Kids Flashcard app.
 // Strategy: precache the app shell on install; cache-first for everything
 // else (content + media) so each asset becomes available offline once fetched.
-const VERSION = 'v11';
+const VERSION = 'v12';
 const SHELL = 'shell-' + VERSION;
 const RUNTIME = 'runtime-' + VERSION;
 

@@ -26,7 +26,7 @@
     <header class="topbar">
       <button id="backBtn" class="icon-btn" aria-label="回到卡組">‹</button>
       <span id="deckName" class="deck-name"></span>
-      <span id="progress" class="progress"></span>
+      <div id="progress" class="progress"><div id="progressFill" class="progress-fill"></div></div>
       <button id="langBtn" class="lang-switch" aria-label="Language"></button>
     </header>
 
@@ -45,9 +45,9 @@
     </main>
 
     <footer class="controls">
-      <button id="replayEn" class="mini-btn" aria-label="再聽英文">🔊 英文</button>
+      <button id="replayEn" class="replay-btn" aria-label="Play English"><span class="spk">🔊</span></button>
       <button id="playBtn" class="play-btn" aria-label="播放">▶</button>
-      <button id="replayTr" class="mini-btn" aria-label="再聽翻譯">🌐 翻譯</button>
+      <button id="replayTr" class="replay-btn" aria-label="Play translation"><span class="spk">🔊</span></button>
     </footer>
   </section>
 

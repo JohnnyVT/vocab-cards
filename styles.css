@@ -82,8 +82,22 @@ html, body {
   padding: env(safe-area-inset-top, 8px) 16px 8px;
   padding-top: max(env(safe-area-inset-top), 10px);
 }
-.deck-name { font-weight: 700; font-size: 20px; }
-.progress { margin-left: auto; color: var(--muted); font-weight: 600; font-size: 18px; }
+.deck-name { font-weight: 700; font-size: 20px; white-space: nowrap; }
+.progress {
+  flex: 1;
+  height: 14px;
+  margin: 0 14px;
+  background: rgba(0,0,0,.08);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  border-radius: 999px;
+  transition: width .3s ease;
+}
 .icon-btn {
   width: 56px; height: 56px;
   border: none; border-radius: 50%;
@@ -194,13 +208,26 @@ html, body {
 }
 .play-btn:active { transform: scale(.92); }
 .play-btn.playing { background: var(--blue); box-shadow: 0 10px 24px rgba(74,163,255,.5); }
-.mini-btn {
-  border: none; border-radius: 999px;
-  background: var(--accent-2); color: var(--ink);
-  font-size: clamp(15px, 2.2vh, 20px); font-weight: 700;
-  padding: 12px 18px; cursor: pointer; min-height: 52px;
+/* Replay buttons: round, flag-coloured, with a white speaker chip (always legible). */
+.replay-btn {
+  width: clamp(60px, 9vh, 78px);
+  height: clamp(60px, 9vh, 78px);
+  border: none; border-radius: 50%;
+  background: var(--accent-2);   /* overridden per-language via inline style */
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  display: grid; place-items: center;
+  transition: transform .1s ease;
 }
-.mini-btn:active { transform: scale(.94); }
+.replay-btn:active { transform: scale(.92); }
+.replay-btn .spk {
+  width: 56%; height: 56%;
+  border-radius: 50%;
+  background: #fff;
+  display: grid; place-items: center;
+  font-size: clamp(20px, 3vh, 28px);
+  box-shadow: 0 1px 3px rgba(0,0,0,.15);
+}
 
 /* ---------- Language sheet ---------- */
 .sheet {
