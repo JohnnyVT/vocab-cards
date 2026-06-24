@@ -27,6 +27,11 @@ html, body {
 .hidden { display: none !important; }
 
 /* ---------- Home ---------- */
+.home-topbar {
+  display: flex;
+  justify-content: flex-end;
+  padding: max(env(safe-area-inset-top), 10px) 16px 0;
+}
 .home-title {
   text-align: center;
   font-size: clamp(28px, 5vw, 48px);

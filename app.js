@@ -1,11 +1,25 @@
 'use strict';
 
 // ---------- State ----------
-const LANGS = ['zh', 'ja', 'vi', 'bg'];
-let lang = localStorage.getItem('lang') || 'zh';
+// One language setting drives the whole app (UI + card translation).
+// 'en' = English-only interface (cards show just the English word, no translation).
+const LANGS = ['en', 'zh', 'ja', 'vi', 'bg'];
+let lang = localStorage.getItem('lang') || 'en';
+let decksData = null;   // cached decks.json so the home list can re-render on language change
 let deck = null;        // { base, title, cards }
 let index = 0;
 let playToken = 0;      // cancels an in-flight play sequence when card changes
+
+// UI strings per interface language.
+const I18N = {
+  en: { homeTitle: '📚 My Flashcards', homeHint: 'Pick a set to start learning!', soon: 'Coming soon', sheet: 'Language', close: 'Close', replayEn: '🔊 English', replayTr: '🌐 Translation' },
+  zh: { homeTitle: '📚 我的單字卡', homeHint: '挑一組開始學英文吧！', soon: '即將推出', sheet: '選擇語言', close: '關閉', replayEn: '🔊 英文', replayTr: '🌐 翻譯' },
+  ja: { homeTitle: '📚 たんごカード', homeHint: 'カードを えらんで はじめよう！', soon: 'もうすぐ', sheet: '言語', close: 'とじる', replayEn: '🔊 えいご', replayTr: '🌐 ほんやく' },
+  vi: { homeTitle: '📚 Thẻ từ vựng', homeHint: 'Chọn một bộ để bắt đầu học!', soon: 'Sắp ra mắt', sheet: 'Ngôn ngữ', close: 'Đóng', replayEn: '🔊 Tiếng Anh', replayTr: '🌐 Bản dịch' },
+  bg: { homeTitle: '📚 Моите карти', homeHint: 'Избери комплект, за да започнеш!', soon: 'Очаквайте скоро', sheet: 'Език', close: 'Затвори', replayEn: '🔊 Английски', replayTr: '🌐 Превод' },
+};
+const t = () => I18N[lang] || I18N.en;
+const titleOf = (obj) => (obj && (obj[lang] || obj.en)) || '';
 
 // ---------- DOM ----------
 const $ = (id) => document.getElementById(id);
@@ -23,20 +37,25 @@ const nextBtn = $('nextBtn');
 
 // ---------- Home ----------
 async function initHome() {
-  const data = await fetch('decks.json').then(r => r.json());
+  decksData = await fetch('decks.json').then(r => r.json());
+  applyLang();
+}
+
+function renderHome() {
+  if (!decksData) return;
   deckListEl.innerHTML = '';
-  for (const d of data.decks) {
+  for (const d of decksData.decks) {
     const btn = document.createElement('button');
     btn.className = 'deck-card';
-    btn.innerHTML = `<span class="deck-emoji">${d.emoji}</span><span>${d.title.zh}</span>`;
+    btn.innerHTML = `<span class="deck-emoji">${d.emoji}</span><span>${titleOf(d.title)}</span>`;
     btn.onclick = () => openDeck(d);
     deckListEl.appendChild(btn);
   }
-  for (const d of (data.comingSoon || [])) {
+  for (const d of (decksData.comingSoon || [])) {
     const btn = document.createElement('button');
     btn.className = 'deck-card soon';
     btn.disabled = true;
-    btn.innerHTML = `<span class="deck-emoji">${d.emoji}</span><span>${d.title.zh}</span><span class="badge">即將推出</span>`;
+    btn.innerHTML = `<span class="deck-emoji">${d.emoji}</span><span>${titleOf(d.title)}</span><span class="badge">${t().soon}</span>`;
     deckListEl.appendChild(btn);
   }
 }
@@ -49,7 +68,7 @@ async function openDeck(d) {
     cards: cards.cards,
   };
   index = 0;
-  deckNameEl.textContent = cards.title.zh;
+  deckNameEl.textContent = titleOf(cards.title);
   homeEl.classList.add('hidden');
   playerEl.classList.remove('hidden');
   render();
@@ -62,7 +81,7 @@ function render() {
   const card = deck.cards[index];
   progressEl.textContent = `${index + 1} / ${deck.cards.length}`;
   enTextEl.textContent = card.text.en;
-  trTextEl.textContent = card.text[lang] || '';
+  trTextEl.textContent = lang === 'en' ? '' : (card.text[lang] || '');
   prevBtn.disabled = index === 0;
   nextBtn.disabled = index === deck.cards.length - 1;
   buildMedia(card);
@@ -137,8 +156,10 @@ async function playSequence() {
   if (token !== playToken) return;
   await playClip(en, 0.7, token);   // 2nd: slower, clearer
   if (token !== playToken) return;
-  await playClip(audioPath(card, lang), 1.0, token); // translation
-  if (token !== playToken) return;
+  if (lang !== 'en') {              // English-only mode: no translation clip
+    await playClip(audioPath(card, lang), 1.0, token); // translation
+    if (token !== playToken) return;
+  }
 
   if (v) { try { v.pause(); } catch (e) {} }
   setPlaying(false);
@@ -175,6 +196,7 @@ $('replayEn').onclick = async () => {
   if (token === playToken) await playClip(en, 0.7, token);
 };
 $('replayTr').onclick = () => {
+  if (lang === 'en') return;       // no translation in English-only mode
   const token = ++playToken; stopAllAudio();
   playClip(audioPath(deck.cards[index], lang), 1.0, token);
 };
@@ -195,21 +217,39 @@ $('player').addEventListener('touchend', (e) => {
   touchX = null;
 }, { passive: true });
 
-// Language sheet
+// Language sheet (shared by the home and player 🌐 buttons)
 const langSheet = $('langSheet');
-function refreshLangButtons() {
+
+// Apply the current language across the whole UI.
+function applyLang() {
+  const s = t();
+  $('homeTitle').textContent = s.homeTitle;
+  $('homeHint').textContent = s.homeHint;
+  $('langSheetTitle').textContent = s.sheet;
+  $('langClose').textContent = s.close;
+  $('replayEn').textContent = s.replayEn;
+  $('replayTr').textContent = s.replayTr;
+  $('replayTr').hidden = (lang === 'en');   // no translation in English-only mode
+  document.documentElement.lang = lang;
   document.querySelectorAll('.lang-opt').forEach(b =>
     b.classList.toggle('active', b.dataset.lang === lang));
+  renderHome();
+  if (deck) {
+    deckNameEl.textContent = titleOf(deck.title);
+    trTextEl.textContent = lang === 'en' ? '' : (deck.cards[index].text[lang] || '');
+  }
 }
-$('langBtn').onclick = () => { refreshLangButtons(); langSheet.classList.remove('hidden'); };
+
+const openLangSheet = () => langSheet.classList.remove('hidden');
+$('langBtn').onclick = openLangSheet;
+$('homeLangBtn').onclick = openLangSheet;
 $('langClose').onclick = () => langSheet.classList.add('hidden');
 document.querySelectorAll('.lang-opt').forEach(b => {
   b.onclick = () => {
     lang = b.dataset.lang;
     localStorage.setItem('lang', lang);
-    refreshLangButtons();
     langSheet.classList.add('hidden');
-    if (deck) { trTextEl.textContent = deck.cards[index].text[lang] || ''; }
+    applyLang();
   };
 });
 

@@ -13,9 +13,12 @@
 <body>
   <!-- 卡組選擇畫面 -->
   <section id="home" class="screen">
-    <h1 class="home-title">📚 我的單字卡</h1>
+    <div class="home-topbar">
+      <button id="homeLangBtn" class="icon-btn" aria-label="Language">🌐</button>
+    </div>
+    <h1 class="home-title" id="homeTitle">📚 My Flashcards</h1>
     <div id="deckList" class="deck-list"></div>
-    <p class="home-hint">挑一組開始學英文吧！</p>
+    <p class="home-hint" id="homeHint">Pick a set to start learning!</p>
   </section>
 
   <!-- 單字卡播放畫面 -->
@@ -51,14 +54,15 @@
   <!-- 語言選擇 -->
   <div id="langSheet" class="sheet hidden">
     <div class="sheet-card">
-      <h2>選擇翻譯語言</h2>
+      <h2 id="langSheetTitle">Language</h2>
       <div class="lang-grid">
+        <button class="lang-opt" data-lang="en">🇬🇧 English</button>
         <button class="lang-opt" data-lang="zh">🇹🇼 中文</button>
         <button class="lang-opt" data-lang="ja">🇯🇵 日本語</button>
         <button class="lang-opt" data-lang="vi">🇻🇳 Tiếng Việt</button>
         <button class="lang-opt" data-lang="bg">🇧🇬 Български</button>
       </div>
-      <button id="langClose" class="close-btn">關閉</button>
+      <button id="langClose" class="close-btn">Close</button>
     </div>
   </div>
 
