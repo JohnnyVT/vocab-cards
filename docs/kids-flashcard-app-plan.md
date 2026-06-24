@@ -104,15 +104,15 @@
 
 ### 5.1 各語言 Voice ID（已選定）
 
-每種語言用各自挑選的聲音（解決口音問題），統一用 `eleven_multilingual_v2`：
+每種語言用各自挑選的聲音（解決口音問題）。模型：多數語言用 `eleven_multilingual_v2`；**中文改用 `eleven_turbo_v2_5` 並帶 `language_code:"zh"`**，避免單一中日共用漢字（如「鳥」）被誤判成日文（念成 tori）。設定見 `scripts/gen-audio.mjs` 的 `LANGS`。
 
 | 語言 | Voice ID |
 |------|----------|
 | 英文 en | `2OEeJcYw2f3bWMzzjVMU` |
-| 繁體中文 zh | `r6qgCCGI7RWKXCagm158` |
+| 繁體中文 zh | `APSIkVZudNbPAwyPoeVO` |
 | 日文 ja | `3321Alera3fXjEWjjbAX` |
 | 越南文 vi | `IovBBFnLZ6QzJhFLLroy` |
-| 保加利亞文 bg | `vnewfQdVVk9Y9DZWVRNm` |
+| 保加利亞文 bg | `M1ydWt7KnBCiuv4CnEDC` |
 
 > 產生 mp3 需要 **ElevenLabs API key**。生成腳本見 §13，key 設在環境變數 `ELEVENLABS_API_KEY`。
 
@@ -294,11 +294,20 @@ kids-vocab-app/            # 專案根目錄
 - `content/animals/cards.json`：動物組 10 張（7 單字圖片卡 + 3 簡單句影片卡），含 en/zh/ja/vi/bg 文字
 - **語音：50 個 mp3 已生成並驗證播放**（10 卡 × 5 語言，ElevenLabs）
 - `scripts/gen-audio.mjs`：批次生成腳本
+- **圖片：7 張 `.webp` 已生成**（手寫扁平插畫 SVG → Chrome 點陣化 → cwebp，~6–10KB/張）
+- **影片：3 段 `.mp4` + poster 已生成**（SVG 動畫 → Chrome 幀序列 → ffmpeg H.264 baseline，~20–31KB/支，無縫循環）
+- `scripts/gen-images.mjs`、`scripts/gen-videos.mjs`：素材生成腳本（純本機、零金鑰）
+- `app.js`：影片加 `v.loop = true`，旁白期間影片持續輕柔循環
 
-### 待補素材（目前自動以 emoji 佔位，流程照跑）
-把真檔放到對應路徑即可自動生效：
-- 圖片：`content/animals/assets/img/<id>.webp`（7 張）
-- 影片：`content/animals/assets/video/<id>.mp4`（3 段，Grok 生成）
+> 目前圖片/影片為**自製占位插畫/動畫**（風格一致、適齡、完全離線）。日後拿到更好的素材（如 Grok 短片）時，直接覆蓋同名檔即可生效，不需改程式。
+
+### 重新生成素材
+```bash
+cd /Users/fz/claude/kids-vocab-app
+node scripts/gen-images.mjs    # 7 張動物圖 → content/animals/assets/img/<id>.webp
+node scripts/gen-videos.mjs    # 3 段動畫 + poster（約 5 分鐘，Chrome 渲染 108 幀）
+```
+依賴：Chrome（點陣化）、`cwebp`、`ffmpeg`（皆已安裝於本機）。
 
 ### 產生語音 / API key 管理
 key 只在「製作內容」時用來產生 mp3，**不會被打包進 app、執行時也不會用到**（app 純靜態離線）。
@@ -318,6 +327,7 @@ cd /Users/fz/claude/kids-vocab-app && python3 -m http.server 4321
 # 開 http://localhost:4321
 ```
 
-### 還需要的素材
-1. **7 張動物圖片**（bird/cat/dog/fish/rabbit/elephant/duck）
-2. **3 段 Grok 短影片**（bird-fly / cat-sleep / dog-run）
+### 素材狀態（動物組已全部備齊占位）
+1. ✅ **7 張動物圖片**（bird/cat/dog/fish/rabbit/elephant/duck）— 自製 SVG 插畫
+2. ✅ **3 段短影片**（bird-fly / cat-sleep / dog-run）— 自製 SVG 動畫占位；之後可換成 Grok 短片
+   - 動物組 10 張卡全部已可正常顯示與播放（已在 preview 驗證：圖片渲染、影片循環播放、無 console 錯誤）

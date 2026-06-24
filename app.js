@@ -80,6 +80,7 @@ function buildMedia(card) {
     if (card.poster) v.poster = deck.base + card.poster;
     v.playsInline = true;
     v.muted = true;          // English audio is layered separately
+    v.loop = true;           // gently loop the short clip while narration plays
     v.preload = 'metadata';
     v.onerror = showEmoji;    // no video yet -> emoji placeholder
     mediaEl.appendChild(v);
