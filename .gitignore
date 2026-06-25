@@ -2,3 +2,4 @@
 .claude/
 .env
 .env.local
+unprocessed-image/

@@ -145,6 +145,9 @@ function playClip(src, rate, token) {
 function audioPath(card, l) {
   return `${deck.base}assets/audio/${l}/${card.id}.mp3`;
 }
+function sfxPath(card) {
+  return `${deck.base}assets/audio/sfx/${card.id}.mp3`;
+}
 
 async function playSequence() {
   const token = ++playToken;
@@ -152,9 +155,13 @@ async function playSequence() {
   setPlaying(true);
   const card = deck.cards[index];
 
-  // Start video (muted) alongside the English audio
+  // Start video (muted) alongside the audio
   const v = mediaEl.querySelector('video');
   if (v) { try { v.currentTime = 0; await v.play().catch(() => {}); } catch (e) {} }
+
+  // Animal sound effect first (skips gracefully if the file doesn't exist).
+  await playClip(sfxPath(card), 1.0, token);
+  if (token !== playToken) return;
 
   const en = audioPath(card, 'en');
   await playClip(en, 0.9, token);   // 1st: slightly slow
