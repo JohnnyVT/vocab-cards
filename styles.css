@@ -1,12 +1,15 @@
 :root {
-  --bg: #fff8e7;
+  /* VoiceTube brand palette, brightened for kids: violet base + coral & teal accents */
+  --bg: #f4eefc;          /* soft lavender (brand violet, airy) */
   --card-bg: #ffffff;
-  --accent: #ff8a3d;
-  --accent-2: #ffd54a;
-  --blue: #4aa3ff;
-  --ink: #3a3026;
-  --muted: #9b8f7e;
-  --shadow: 0 10px 30px rgba(0,0,0,.12);
+  --accent: #ef6a45;      /* brand coral — primary action / highlight */
+  --accent-2: #ece3fb;    /* soft lavender — secondary surfaces */
+  --violet: #7e3aaf;      /* brand light violet */
+  --teal: #16c7c1;        /* brand teal accent */
+  --blue: #7e3aaf;        /* "playing" state -> brand violet (kept name for compat) */
+  --ink: #2a1140;         /* deep brand violet — text */
+  --muted: #9385a8;       /* muted violet-grey */
+  --shadow: 0 12px 30px rgba(33,0,64,.14);
   --radius: 28px;
 }
 
@@ -29,9 +32,11 @@ html, body {
 /* ---------- Home ---------- */
 .home-topbar {
   display: flex;
-  justify-content: flex-end;
-  padding: max(env(safe-area-inset-top), 10px) 16px 0;
+  align-items: center;
+  justify-content: space-between;
+  padding: max(env(safe-area-inset-top), 10px) 20px 0;
 }
+.brand-logo { height: 30px; width: auto; display: block; }
 .home-title {
   text-align: center;
   font-size: clamp(28px, 5vw, 48px);
@@ -70,7 +75,7 @@ html, body {
 .deck-card.soon { opacity: .55; }
 .deck-card.soon .badge {
   font-size: 13px; font-weight: 600; color: var(--muted);
-  background: #f0e7d6; padding: 2px 10px; border-radius: 999px;
+  background: var(--accent-2); padding: 2px 10px; border-radius: 999px;
 }
 .home-hint { text-align: center; color: var(--muted); padding: 16px; font-size: 18px; }
 
@@ -163,7 +168,7 @@ html, body {
   position: relative;
   display: grid;
   place-items: center;
-  background: linear-gradient(160deg, #fff3d6, #ffe6c2);
+  background: linear-gradient(160deg, #f6efff, #fdeee9);
   min-height: 0;
   overflow: hidden;
 }
@@ -213,12 +218,12 @@ html, body {
   border: none; border-radius: 50%;
   background: var(--accent); color: #fff;
   font-size: clamp(40px, 6vh, 56px);
-  box-shadow: 0 10px 24px rgba(255,138,61,.5);
+  box-shadow: 0 10px 24px rgba(239,106,69,.45);
   cursor: pointer; display: grid; place-items: center;
   transition: transform .1s ease;
 }
 .play-btn:active { transform: scale(.92); }
-.play-btn.playing { background: var(--blue); box-shadow: 0 10px 24px rgba(74,163,255,.5); }
+.play-btn.playing { background: var(--violet); box-shadow: 0 10px 24px rgba(126,58,175,.45); }
 /* Replay buttons: round flag icons (the flag IS the button). */
 .replay-btn {
   width: clamp(60px, 9vh, 78px);
@@ -257,7 +262,7 @@ html, body {
   font-size: 20px; font-weight: 700; color: var(--ink);
   padding: 18px 10px; cursor: pointer; min-height: 64px;
 }
-.lang-opt.active { border-color: var(--accent); background: #fff3e0; }
+.lang-opt.active { border-color: var(--violet); background: var(--accent-2); }
 .close-btn {
   margin-top: 20px; border: none; border-radius: 999px;
   background: var(--ink); color: #fff; font-size: 18px; font-weight: 700;
